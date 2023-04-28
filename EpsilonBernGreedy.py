@@ -1,3 +1,8 @@
+"""
+Source: Lab 13
+"""
+
+
 import random
 
 
@@ -6,7 +11,7 @@ def ind_max(x):
     return x.index(m)
 
 
-class EpsilonGreedy:
+class EpsilonBernGreedy:
     def __init__(self, epsilon, counts, values):
         self.epsilon = epsilon
         self.counts = counts
