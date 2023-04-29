@@ -44,13 +44,16 @@ class GaussTS:
 
     def sample_arm(self, arm):
         est_var = float('inf')
-        precision = gamma.rvs(self.alphas[arm], 1 / self.betas[arm])
+        precision = gamma.rvs(self.alphas[arm], scale=1 / self.betas[arm])
         if precision != 0 and self.counts[arm] != 0:
             est_var = 1 / precision
 
         sample = norm.rvs(self.means[arm], est_var ** 0.5)
 
         return sample
+
+    def posterior(self, arm):
+        return norm(self.means[arm], self.vars[arm] ** 0.5)
 
     def update(self, arm, reward):
         v = self.counts[arm]
