@@ -38,15 +38,19 @@ class GaussTS:
         return
 
     def select_arm(self):
-        est_vars = [float('inf') for _ in range(self.n_arms)]
-        for arm in range(self.n_arms):
-            precision = gamma.rvs(self.alphas[arm], 1 / self.betas[arm])
-            if precision != 0 and self.counts[arm] != 0:
-                est_vars[arm] = 1 / precision
-
-        samples = [norm.rvs(self.means[arm], self.vars[arm] ** 0.5) for arm in range(self.n_arms)]
+        samples = [self.sample_arm(arm) for arm in range(self.n_arms)]
 
         return ind_max(samples)
+
+    def sample_arm(self, arm):
+        est_var = float('inf')
+        precision = gamma.rvs(self.alphas[arm], 1 / self.betas[arm])
+        if precision != 0 and self.counts[arm] != 0:
+            est_var = 1 / precision
+
+        sample = norm.rvs(self.means[arm], est_var ** 0.5)
+
+        return sample
 
     def update(self, arm, reward):
         v = self.counts[arm]
